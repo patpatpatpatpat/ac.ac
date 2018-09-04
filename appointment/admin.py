@@ -39,6 +39,7 @@ class AppointmentAdmin(admin.ModelAdmin):
     ]
     list_filter = [
       'status',
+      'datetime',
     ]
 
 
