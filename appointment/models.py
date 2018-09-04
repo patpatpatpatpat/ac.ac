@@ -1,9 +1,14 @@
-from django.db import models
+import uuid as uuid_lib
 
-from django.contrib.auth.models import User
+from django.db import models
 
 
 class Client(models.Model):
+    uuid = models.UUIDField(
+        db_index=True,
+        default=uuid_lib.uuid4,
+        editable=False,
+    )
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
 
@@ -35,11 +40,16 @@ class Appointment(models.Model):
         (RESCHEDULED, 'Rescheduled'),
         (CANCELLED, 'Cancelled'),
     )
+    uuid = models.UUIDField(
+        db_index=True,
+        default=uuid_lib.uuid4,
+        editable=False,
+    )
     date_created = models.DateTimeField(auto_now_add=True)
 
     client = models.ForeignKey('Client', on_delete=models.CASCADE)
     datetime = models.DateTimeField()
-    status =  models.CharField(max_length=4, choices=STATUS_CHOICES)
+    status = models.CharField(max_length=4, choices=STATUS_CHOICES)
 
     discount = models.IntegerField(blank=True, null=True)
     notes = models.TextField(blank=True)
@@ -54,6 +64,11 @@ class Appointment(models.Model):
 
 
 class AppointmentService(models.Model):
+    uuid = models.UUIDField(
+        db_index=True,
+        default=uuid_lib.uuid4,
+        editable=False,
+    )
     appointment = models.ForeignKey('Appointment', on_delete=models.CASCADE)
     service = models.ForeignKey('Service', on_delete=models.CASCADE)
 
@@ -65,6 +80,11 @@ class AppointmentService(models.Model):
 
 
 class Service(models.Model):
+    uuid = models.UUIDField(
+        db_index=True,
+        default=uuid_lib.uuid4,
+        editable=False,
+    )
     name = models.CharField(max_length=100)
     price = models.IntegerField()
 
@@ -77,7 +97,3 @@ class Service(models.Model):
 
     def __str__(self):
         return self.name
-
-
-
-
