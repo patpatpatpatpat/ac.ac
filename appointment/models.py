@@ -60,6 +60,7 @@ class Appointment(models.Model):
         through_fields=('appointment', 'service'),
     )
     tags = TaggableManager()
+    tip = models.IntegerField(default=0)
 
     def __str__(self):
         return self.client.fb_name + ' - ' + str(self.datetime)
