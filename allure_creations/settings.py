@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     # 3rd party
     'django_extensions',
     'rest_framework',
+    'taggit',
 ]
 
 MIDDLEWARE = [
