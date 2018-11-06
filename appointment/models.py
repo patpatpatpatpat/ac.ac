@@ -75,6 +75,10 @@ class AppointmentService(models.Model):
     is_retouch = models.BooleanField(default=False)
     is_free = models.BooleanField(default=False)
 
+    original_price = models.IntegerField(default=0)
+    discount = models.IntegerField(default=0)
+    final_price = models.IntegerField(default=0)
+
     def __str__(self):
         return '{service} - {price}'.format(service=self.service.name, price=self.service.price)
 
