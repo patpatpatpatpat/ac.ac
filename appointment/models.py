@@ -1,6 +1,7 @@
 import uuid as uuid_lib
 
 from django.db import models
+from taggit.managers import TaggableManager
 
 
 class Client(models.Model):
@@ -58,6 +59,7 @@ class Appointment(models.Model):
         through='AppointmentService',
         through_fields=('appointment', 'service'),
     )
+    tags = TaggableManager()
 
     def __str__(self):
         return self.client.fb_name + ' - ' + str(self.datetime)
