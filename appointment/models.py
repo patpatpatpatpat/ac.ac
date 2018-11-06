@@ -59,7 +59,7 @@ class Appointment(models.Model):
         through='AppointmentService',
         through_fields=('appointment', 'service'),
     )
-    tags = TaggableManager()
+    tags = TaggableManager(blank=True)
     tip = models.IntegerField(default=0)
 
     def __str__(self):
