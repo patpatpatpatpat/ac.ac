@@ -47,9 +47,6 @@ class ServiceAdmin(admin.ModelAdmin):
     model = app_models.Service
     list_display = [
         'name',
-        'price',
-        'has_free_retouch',
-        'active',
         'date_created',
     ]
 

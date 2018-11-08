@@ -93,14 +93,8 @@ class Service(models.Model):
         editable=False,
     )
     name = models.CharField(max_length=100)
-    price = models.IntegerField()
-
     active = models.BooleanField(default=True)
-    has_free_retouch = models.BooleanField(default=False)
-
     date_created = models.DateTimeField(auto_now_add=True)
-
-    # promo tags? e.g: kadayawan2018
 
     def __str__(self):
         return self.name
