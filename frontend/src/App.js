@@ -7,12 +7,6 @@ import Select from 'react-select';
 import CreatableSelect from 'react-select/lib/Creatable';
 
 const AUTH_TOKEN = 'Token 2bfe8ad54fe5f59e12f84391b69cc80fd30b577c';
-const options = [
-  { value: 'chocolate', label: 'Chocolate' },
-  { value: 'strawberry', label: 'Strawberry' },
-  { value: 'vanilla', label: 'Vanilla' }
-];
-
 
 class App extends Component {
   constructor(props) {
@@ -36,139 +30,6 @@ class App extends Component {
       </div>
     );
   } 
-}
-
-
-function Appointment(props) {
-  return <li>{props.value}</li>;
-}
-
-
-function AppointmentList(props) {
-  const clients = ['Alpha', 'Bravo', 'Charlie'];
-  const listItems = clients.map((client) =>
-    <Appointment key={client.toString()}
-                 value={client} />
-  );
-
-  return (
-    <ul>
-      {listItems}
-    </ul>
-  )
-}
-
-class AppointmentsToday extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      date: new Date(),
-      app_name: 'ACxAC',
-      isLoggedIn: false,
-    }
-
-    this.handleClick = this.handleClick.bind(this);
-  }
-
-  handleClick() {
-    console.log('handling toggle button');
-    this.setState(state => ({
-      isToggleOn: !state.isToggleOn
-    }));
-  }
-
-  componentDidMount() {
-    console.log('appointments rendered.');
-    this.timerID = setInterval(
-      () => this.tick(),
-      1000,
-    )
-
-    // fetch appointments
-    this.setState({
-      appointmentsToday: [],
-    });
-  }
-
-  componentWillUnmount() {
-    console.log('appointments removed.');
-  }
-
-  componentDidUpdate() {
-    console.log('updated!');
-  }
-
-  tick() {
-    this.setState({
-      date: new Date()
-    });
-  }
-
-  render() {
-    const isLoggedIn = this.state.isLoggedIn;
-    let button;
-    const pendingAppointmentsThisWeek = 1;
-
-    return (
-      <div className="App">
-        <header className="App-header">
-          <h1>{this.state.app_name}</h1>
-          <h2>It is {this.state.date.toLocaleTimeString()}</h2>
-        </header>
-
-        <button onClick={this.handleClick}>
-          {this.state.isToggleOn ? 'ON' : 'OFF'}
-        </button>
-
-        {/* Inline if with Logical && Operator*/}
-        <span>
-          {pendingAppointmentsThisWeek > 0 &&
-              <h2>
-                You have {pendingAppointmentsThisWeek} appointments this week.
-              </h2>
-          }
-        </span>
-        <span>
-          The user is <b>{isLoggedIn ? 'currently': 'not'}</b> logged in.
-        </span>
-        <AppointmentList />
-        <AppointmentForm />
-      </div>
-    )
-  }
-}
-
-
-class AppointmentForm extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      value: '',
-    }
-    this.handleChange = this.handleChange.bind(this)
-    this.handleSubmit = this.handleSubmit.bind(this)
-  }
-
-  handleChange(event) {
-    this.setState({value: event.target.value.toUpperCase()});
-  }
-
-  handleSubmit(event) {
-    alert('A name was submitted: ' + this.state.value);
-    event.preventDefault();
-  }
-
-  render() {
-    return (
-      <form onSubmit={this.handleSubmit}>
-        <label>
-          Name:
-          <input type="text" value={this.state.value} onChange={this.handleChange} />
-        </label>
-        <input type="submit" value="Submit" />
-      </form>
-    )
-  }
 }
 
 
@@ -308,20 +169,15 @@ function handleErrors(response) {
 class NewAppointmentForm extends Component {
     constructor(props) {
       super(props);
-      const options = [
-        { value: 'chocolate', label: 'Chocolate' },
-        { value: 'strawberry', label: 'Strawberry' },
-        { value: 'vanilla', label: 'Vanilla' }
-      ]
       this.state = {
-        'startDate': moment().add(1, 'days'),
-        'client': '',
-        'notes': '',
-        'selectedServices': [],
-        'clientOptions': options,
-        'serviceOptions': [],
-        'tagOptions': [],
-        'error': false,
+        startDate: moment().add(1, 'days'),
+        client: '',
+        notes: '',
+        selectedServices: [],
+        clientOptions: [],
+        serviceOptions: [],
+        tagOptions: [],
+        error: false,
         appointmentCreated: false,
       }
 
