@@ -50,7 +50,11 @@ class Appointment(models.Model):
 
     client = models.ForeignKey('Client', on_delete=models.CASCADE)
     datetime = models.DateTimeField()
-    status = models.CharField(max_length=4, choices=STATUS_CHOICES)
+    status = models.CharField(
+        max_length=4,
+        choices=STATUS_CHOICES,
+        default=PENDING,
+    )
 
     discount = models.IntegerField(blank=True, null=True)
     notes = models.TextField(blank=True)
@@ -61,6 +65,9 @@ class Appointment(models.Model):
     )
     tags = TaggableManager(blank=True)
     tip = models.IntegerField(default=0)
+    # TODO?
+    # cancelled_at?
+    # cancellation reason?
 
     def __str__(self):
         return self.client.fb_name + ' - ' + str(self.datetime)
@@ -83,7 +90,7 @@ class AppointmentService(models.Model):
     final_price = models.IntegerField(default=0)
 
     def __str__(self):
-        return '{service} - {price}'.format(service=self.service.name, price=self.service.price)
+        return '{service} - {price}'.format(service=self.service.name, price=self.final_price)
 
 
 class Service(models.Model):
