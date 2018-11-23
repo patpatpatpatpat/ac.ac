@@ -22,6 +22,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('appointment/', include('appointment.urls')),
     path('api-auth/', include('rest_framework.urls')),
-    path('auth', drf_views.obtain_auth_token, name='auth'),
+    path('auth/', drf_views.obtain_auth_token, name='auth'),
     re_path('.*', TemplateView.as_view(template_name='index.html')),
 ]

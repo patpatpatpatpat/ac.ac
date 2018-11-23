@@ -5,32 +5,50 @@ import moment from "moment";
 import "react-datepicker/dist/react-datepicker.css";
 import Select from 'react-select';
 import CreatableSelect from 'react-select/lib/Creatable';
+import { Button, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
+import base64 from 'base-64';
 
-const AUTH_TOKEN = 'Token 2bfe8ad54fe5f59e12f84391b69cc80fd30b577c';
+const localStorageAuthToken = localStorage.getItem('auth_token');
+const AUTH_TOKEN = 'Token ' + localStorageAuthToken;
+const apiBaseURL = 'http://localhost:8000/';
 
 class App extends Component {
   constructor(props) {
     super(props)
+
     this.state = {
-      app_name: 'ACxAC'
+      app_name: 'ACxAC',
+      isLoggedIn: localStorageAuthToken === null ? false : true,
     }
   }
 
   render() {
-    return (
-      <div>
-        <h6>Search Client</h6>
-        <FilterableClientTable />
-        <hr></hr>
-        <h6>Add Client</h6>
-        <NewClientForm />
-        <hr></hr>
-        <h6>New Appointment</h6>
-        <NewAppointmentForm />
-      </div>
-    );
-  } 
+    const isLoggedIn = this.state.isLoggedIn;
+
+    if (isLoggedIn) {
+      return (
+        <div>
+          {isLoggedIn ? 'Welcome!' : <Login/>}
+          <hr></hr>
+          <h6>Search Client</h6>
+          <FilterableClientTable />
+          <hr></hr>
+          <h6>Add Client</h6>
+          <NewClientForm />
+          <hr></hr>
+          <h6>New Appointment</h6>
+          <NewAppointmentForm />
+        </div>
+      )
+    } else {
+      return (
+        <Login />
+      )
+    } 
+  }
 }
+
+
 
 
 class ClientRow extends React.Component {
@@ -329,7 +347,7 @@ class NewAppointmentForm extends Component {
 
     render() {
       return (
-        <form onSubmit={this.handleSubmit}>
+        <form onSubmit={this.handleSubmit} id="appointmentForm">
           {this.state.appointmentCreated && 
             <div className="alert alert-success" role="alert">
               Appointment created!
@@ -347,6 +365,7 @@ class NewAppointmentForm extends Component {
               onChange={this.handleClientChange}
               options={this.state.clientOptions}
               name="client"
+              inputProps={{id: "client"}}
             />
           </div>
           <div className="form-group">
@@ -381,6 +400,7 @@ class NewAppointmentForm extends Component {
                   isMulti={true}
                   options={this.state.tagOptions}
                   onChange={this.handleSelectedTagsChange}
+                  inputProps={{id: "tags"}}
                 />
             </div>
             <div className="form-group">
@@ -510,4 +530,92 @@ class NewClientForm extends Component {
         </form>
       )
     }
+}
+
+
+class Login extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      username: "",
+      password: "",
+      loginResult: '',
+    };
+  }
+
+  validateForm() {
+    return this.state.username.length > 0 && this.state.password.length > 0;
+  }
+
+  handleChange = event => {
+    this.setState({
+      [event.target.id]: event.target.value
+    });
+  }
+
+  handleSubmit = event => {
+    event.preventDefault();
+    const credentials = {
+      username: this.state.username,
+      password: this.state.password,
+    }
+
+    const postData = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(credentials),
+    }
+    const obtainAuthTokenURL = apiBaseURL + 'auth/';
+
+    fetch(obtainAuthTokenURL, postData)
+      .then(response => response.json())
+      .then(response => {
+        if (response.non_field_errors) {
+          this.setState({
+            loginResult: response.non_field_errors[0],
+          });
+        } else {
+          localStorage.setItem('auth_token', response.token);
+          window.location.reload();
+        }
+      });
+  }
+
+  render() {
+    return (
+      <div className="Login">
+        <form onSubmit={this.handleSubmit}>
+          <FormGroup controlId="username" bsSize="large">
+            <ControlLabel>Username</ControlLabel>
+            <FormControl
+              autoFocus
+              type="text"
+              value={this.state.username  }
+              onChange={this.handleChange}
+            />
+          </FormGroup>
+          <FormGroup controlId="password" bsSize="large">
+            <ControlLabel>Password</ControlLabel>
+            <FormControl
+              value={this.state.password}
+              onChange={this.handleChange}
+              type="password"
+            />
+          </FormGroup>
+          {this.state.loginResult}
+          <Button
+            block
+            bsSize="large"
+            disabled={!this.validateForm()}
+            type="submit"
+          >
+            Login
+          </Button>
+        </form>
+      </div>
+    );
+  }
 }
