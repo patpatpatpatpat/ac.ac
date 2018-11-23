@@ -253,7 +253,7 @@ class NewAppointmentForm extends Component {
           });
         })
 
-      const serviceList = apiBaseURL + '/appointment/api/services/';
+      const serviceList = apiBaseURL + 'appointment/api/services/';
 
       fetch(serviceList, headers)
         .then(response => response.json())
@@ -269,7 +269,7 @@ class NewAppointmentForm extends Component {
           })
         })
 
-      const tagList = apiBaseURL + '/appointment/api/tags/';
+      const tagList = apiBaseURL + 'appointment/api/tags/';
 
       fetch(tagList, headers)
         .then(response => response.json())
