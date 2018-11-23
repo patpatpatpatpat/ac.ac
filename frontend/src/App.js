@@ -6,11 +6,14 @@ import "react-datepicker/dist/react-datepicker.css";
 import Select from 'react-select';
 import CreatableSelect from 'react-select/lib/Creatable';
 import { Button, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
-import base64 from 'base-64';
 
-const localStorageAuthToken = localStorage.getItem('auth_token');
-const AUTH_TOKEN = 'Token ' + localStorageAuthToken;
+let AUTH_TOKEN;
 const apiBaseURL = 'http://localhost:8000/';
+
+function setToken(token) {
+  localStorage.setItem('auth_token', token);
+  AUTH_TOKEN = 'Token ' + token;
+}
 
 class App extends Component {
   constructor(props) {
@@ -18,8 +21,26 @@ class App extends Component {
 
     this.state = {
       app_name: 'ACxAC',
-      isLoggedIn: localStorageAuthToken === null ? false : true,
+      isLoggedIn: false,
     }
+
+    this.makeLoggedIn = this.makeLoggedIn.bind(this);
+  }
+
+  componentDidMount() {
+    let storedToken = localStorage.getItem('auth_token');
+    if (storedToken) {
+      setToken(storedToken);
+      this.setState({
+        isLoggedIn: true,
+      })
+    }
+  }
+
+  makeLoggedIn(user) {
+    this.setState({
+      isLoggedIn: true,
+    });
   }
 
   render() {
@@ -28,7 +49,7 @@ class App extends Component {
     if (isLoggedIn) {
       return (
         <div>
-          {isLoggedIn ? 'Welcome!' : <Login/>}
+          Welcome!
           <hr></hr>
           <h6>Search Client</h6>
           <FilterableClientTable />
@@ -42,7 +63,9 @@ class App extends Component {
       )
     } else {
       return (
-        <Login />
+        <Login
+          makeLoggedIn={this.makeLoggedIn}
+        />
       )
     } 
   }
@@ -578,8 +601,8 @@ class Login extends Component {
             loginResult: response.non_field_errors[0],
           });
         } else {
-          localStorage.setItem('auth_token', response.token);
-          window.location.reload();
+          setToken(response.token);
+          this.props.makeLoggedIn();
         }
       });
   }
