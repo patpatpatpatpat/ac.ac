@@ -158,7 +158,7 @@ class FilterableClientTable extends Component {
   }
 
   componentDidMount() {
-    const clientList = 'http://localhost:8000/appointment/api/clients/';
+    const clientList = apiBaseURL + 'appointment/api/clients/';
     const headers = {
       method: 'GET',
       headers: {
@@ -230,7 +230,7 @@ class NewAppointmentForm extends Component {
     }
 
     componentDidMount() {
-      const clientList = 'http://localhost:8000/appointment/api/clients/';
+      const clientList = apiBaseURL + 'appointment/api/clients/';
       const headers = {
         method: 'GET',
         headers: {
@@ -253,7 +253,7 @@ class NewAppointmentForm extends Component {
           });
         })
 
-      const serviceList = 'http://localhost:8000/appointment/api/services/';
+      const serviceList = apiBaseURL + '/appointment/api/services/';
 
       fetch(serviceList, headers)
         .then(response => response.json())
@@ -269,7 +269,7 @@ class NewAppointmentForm extends Component {
           })
         })
 
-      const tagList = 'http://localhost:8000/appointment/api/tags/';
+      const tagList = apiBaseURL + '/appointment/api/tags/';
 
       fetch(tagList, headers)
         .then(response => response.json())
@@ -304,7 +304,7 @@ class NewAppointmentForm extends Component {
         body: JSON.stringify(postData),
       }
 
-      const createAppointmentEndpoint = 'http://localhost:8000/appointment/api/appointments/';
+      const createAppointmentEndpoint = apiBaseURL + 'appointment/api/appointments/';
       fetch(createAppointmentEndpoint, headers)
         .then(handleErrors)
         .then(response => {
@@ -473,7 +473,7 @@ class NewClientForm extends Component {
     handleSubmit(event) {
       event.preventDefault();
       const postData = JSON.stringify(this.state);
-      const createClient = 'http://localhost:8000/appointment/api/clients/';
+      const createClient = apiBaseURL +'appointment/api/clients/';
       const headers = {
         method: 'POST',
         headers: {
