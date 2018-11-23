@@ -594,6 +594,7 @@ class Login extends Component {
     const obtainAuthTokenURL = apiBaseURL + 'auth/';
 
     fetch(obtainAuthTokenURL, postData)
+      .then(handleErrors)
       .then(response => response.json())
       .then(response => {
         if (response.non_field_errors) {
@@ -604,6 +605,11 @@ class Login extends Component {
           setToken(response.token);
           this.props.makeLoggedIn();
         }
+      })
+      .catch(error => {
+          this.setState({
+            loginResult: 'Something went wrong!',
+          });
       });
   }
 
