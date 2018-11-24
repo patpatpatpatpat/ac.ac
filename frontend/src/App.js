@@ -211,7 +211,7 @@ class NewAppointmentForm extends Component {
     constructor(props) {
       super(props);
       this.state = {
-        startDate: moment().add(1, 'days'),
+        startDate: moment().add(1, 'days').toDate(),
         client: '',
         notes: '',
         selectedServices: [],
@@ -227,6 +227,7 @@ class NewAppointmentForm extends Component {
       this.handleClientChange = this.handleClientChange.bind(this);
       this.handleSelectedServicesChange = this.handleSelectedServicesChange.bind(this);
       this.handleSelectedTagsChange = this.handleSelectedTagsChange.bind(this);
+      this.handleDateChange = this.handleDateChange.bind(this);
     }
 
     componentDidMount() {
@@ -308,14 +309,10 @@ class NewAppointmentForm extends Component {
       fetch(createAppointmentEndpoint, headers)
         .then(handleErrors)
         .then(response => {
-          console.log('app created');
           this.setState({
             error: false,
             appointmentCreated: true,
-            startDate: moment().add(1, 'days'),
-            // client: '',
-            // selectedServices: [],
-            // selectedTags: [],
+            startDate: moment().add(1, 'days').toDate(),
             notes: '',
           });
         })
@@ -323,16 +320,16 @@ class NewAppointmentForm extends Component {
           this.setState({
             error: true,
           })
-        })
+        });
       }
 
+    handleDateChange(value) {
+      this.setState({
+        startDate: value,
+      });
+    }
+
     handleInputChange(event) {
-      if (event._isAMomentObject) {
-        this.setState({
-          startDate: event,
-        });
-        return;
-      } 
       const target = event.target;
       const value = target.value;
       const name = target.name
@@ -396,15 +393,15 @@ class NewAppointmentForm extends Component {
             <DatePicker
                 id="date"
                 selected={this.state.startDate}
-                onChange={this.handleInputChange}
+                onChange={this.handleDateChange}
                 showTimeSelect
                 timeIntervals={30}
-                dateFormat="LLL"
+                dateFormat="MMMM d, yyyy h:mm aa"
                 timeCaption="time"
                 className="form-control"
-                minDate={moment()}
-                minTime={moment().hours(7).minutes(0)}
-                maxTime={moment().hours(21).minutes(0)}
+                minDate={moment().toDate()}
+                minTime={moment().hours(7).minutes(0).toDate()}
+                maxTime={moment().hours(21).minutes(0).toDate()}
                 monthsShown={2}
             />
           </div>
@@ -594,7 +591,6 @@ class Login extends Component {
     const obtainAuthTokenURL = apiBaseURL + 'auth/';
 
     fetch(obtainAuthTokenURL, postData)
-      .then(handleErrors)
       .then(response => response.json())
       .then(response => {
         if (response.non_field_errors) {
@@ -606,11 +602,6 @@ class Login extends Component {
           this.props.makeLoggedIn();
         }
       })
-      .catch(error => {
-          this.setState({
-            loginResult: 'Something went wrong!',
-          });
-      });
   }
 
   render() {
