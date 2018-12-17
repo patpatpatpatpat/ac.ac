@@ -677,11 +677,11 @@ class Login extends Component {
               onChange={this.handleChange}
               type="password"
             />
-          </FormGroup>
           {this.state.loginResult}
+          </FormGroup>
           <Button
-            block
             bsSize="large"
+            bsStyle="primary"
             disabled={!this.validateForm()}
             type="submit"
           >
