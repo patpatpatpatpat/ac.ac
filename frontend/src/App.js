@@ -279,7 +279,7 @@ class NewAppointmentForm extends Component {
         .then(response => {
           let tagOptions = response.map(tag => {
             return {
-              value: tag.id,
+              value: String(tag.id),
               label: tag.name,
             }
           });
