@@ -210,9 +210,11 @@ function handleErrors(response) {
 class NewAppointmentForm extends Component {
     constructor(props) {
       super(props);
+      this.defaultTime = moment().hours(7).minutes(0).toDate();
+      this.defaultDate = moment().add(1, 'days').toDate();
       this.state = {
-        startDate: moment().add(1, 'days').toDate(),
-        time: moment().hours(7).minutes(0).toDate(),
+        startDate: this.defaultDate,
+        time: this.defaultTime,
         client: '',
         notes: '',
         selectedServices: [],
@@ -315,11 +317,13 @@ class NewAppointmentForm extends Component {
         .then(handleErrors)
         .then(response => {
           this.setState({
+            startDate: this.defaultDate,
+            time: this.defaultTime,
             error: false,
             appointmentCreated: true,
-            startDate: moment().add(1, 'days').toDate(),
             notes: '',
           });
+
         })
         .catch(error => {
           this.setState({
