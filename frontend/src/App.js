@@ -5,7 +5,7 @@ import moment from "moment";
 import "react-datepicker/dist/react-datepicker.css";
 import Select from 'react-select';
 import CreatableSelect from 'react-select/lib/Creatable';
-import { Button, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
+import { Button, FormGroup, FormControl, ControlLabel, Col, Row } from "react-bootstrap";
 
 let AUTH_TOKEN;
 const apiBaseURL = 'http://localhost:8000/';
@@ -56,7 +56,14 @@ class App extends Component {
     if (isLoggedIn) {
       return (
         <div>
-          Welcome! <Logout makeLoggedOut={this.makeLoggedOut} />
+          <Row className="show-grid">
+            <Col md={11}>
+              Welcome!
+            </Col>
+            <Col md={1}>
+              <Logout makeLoggedOut={this.makeLoggedOut} />
+            </Col>
+          </Row>
           <hr></hr>
           <h6>Search Client</h6>
           <FilterableClientTable />
