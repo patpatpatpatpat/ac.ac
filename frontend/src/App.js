@@ -212,6 +212,7 @@ class NewAppointmentForm extends Component {
       super(props);
       this.state = {
         startDate: moment().add(1, 'days').toDate(),
+        time: moment().hours(7).minutes(0).toDate(),
         client: '',
         notes: '',
         selectedServices: [],
@@ -228,6 +229,7 @@ class NewAppointmentForm extends Component {
       this.handleSelectedServicesChange = this.handleSelectedServicesChange.bind(this);
       this.handleSelectedTagsChange = this.handleSelectedTagsChange.bind(this);
       this.handleDateChange = this.handleDateChange.bind(this);
+      this.handleTimeChange = this.handleTimeChange.bind(this);
     }
 
     componentDidMount() {
@@ -289,13 +291,16 @@ class NewAppointmentForm extends Component {
 
     handleSubmit(event) {
       event.preventDefault();
+
+      let appointmentDateTime = new Date(this.state.startDate.toDateString() + ' ' + this.state.time.toTimeString());
       let postData = {
         client: this.state.client,
-        datetime: this.state.startDate,
+        datetime: appointmentDateTime,
         notes: this.state.notes,
         tags: this.state.tags,
         services: this.state.selectedServices,
       }
+
       let headers = {
         method: 'POST',
         headers: {
@@ -336,6 +341,12 @@ class NewAppointmentForm extends Component {
 
       this.setState({
         [name]: value,
+      });
+    }
+
+    handleTimeChange(value) {
+      this.setState({
+        time: value,
       });
     }
 
@@ -394,15 +405,22 @@ class NewAppointmentForm extends Component {
                 id="date"
                 selected={this.state.startDate}
                 onChange={this.handleDateChange}
-                showTimeSelect
-                timeIntervals={30}
-                dateFormat="MMMM d, yyyy h:mm aa"
-                timeCaption="time"
+                dateFormat="MMMM d, yyyy"
                 className="form-control"
                 minDate={moment().toDate()}
+            />
+            <DatePicker
+                id="time"
+                onChange={this.handleTimeChange}
+                selected={this.state.time}
+                showTimeSelect
+                showTimeSelectOnly
+                timeIntervals={30}
+                timeCaption="Time"
+                dateFormat="h:mm aa"
+                className="form-control"
                 minTime={moment().hours(7).minutes(0).toDate()}
                 maxTime={moment().hours(21).minutes(0).toDate()}
-                monthsShown={2}
             />
           </div>
             <div className="form-group">
