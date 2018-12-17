@@ -58,8 +58,10 @@ class AppointmentSerializer(serializers.ModelSerializer):
         instance = super(AppointmentSerializer, self).create(validated_data)
         request = self.context['request']
 
-        # TODO: handle tags that are created on the fly
-        tags = Tag.objects.filter(id__in=request.data.get('tags', []))
+        tags = [
+            Tag.objects.get_or_create(name=tag_name)[0]
+            for tag_name in request.data.get('tags')
+        ]
         instance.tags.add(*tags)
 
         for service in Service.objects.filter(uuid__in=request.data['services']):
