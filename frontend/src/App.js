@@ -25,6 +25,7 @@ class App extends Component {
     }
 
     this.makeLoggedIn = this.makeLoggedIn.bind(this);
+    this.makeLoggedOut = this.makeLoggedOut.bind(this);
   }
 
   componentDidMount() {
@@ -43,13 +44,19 @@ class App extends Component {
     });
   }
 
+  makeLoggedOut(event) {
+    this.setState({
+      isLoggedIn: false,
+    });
+  }
+
   render() {
     const isLoggedIn = this.state.isLoggedIn;
 
     if (isLoggedIn) {
       return (
         <div>
-          Welcome!
+          Welcome! <Logout makeLoggedOut={this.makeLoggedOut} />
           <hr></hr>
           <h6>Search Client</h6>
           <FilterableClientTable />
@@ -574,6 +581,30 @@ class NewClientForm extends Component {
     }
 }
 
+
+class Logout extends Component {
+  constructor(props){
+    super(props);
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  handleClick(event) {
+    localStorage.removeItem('auth_token');
+    this.props.makeLoggedOut();
+  }
+
+  render() {
+    return (
+      <Button
+        bsStyle="primary"
+        bsSize="small"
+        onClick={this.handleClick}
+      >
+        Logout
+      </Button>
+    )
+  }
+}
 
 class Login extends Component {
   constructor(props) {
